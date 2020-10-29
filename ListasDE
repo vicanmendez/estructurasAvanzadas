@@ -1,0 +1,158 @@
+#include <stdio.h>
+
+typedef struct nodoL {
+    int info;
+    nodoL * sig;
+    nodoL * ant;
+} Nodo;
+
+typedef Nodo * ListaDE;
+
+void Crear (ListaDE &l)
+{
+    l = NULL;
+}
+
+bool Vacia (ListaDE l)
+{
+    return (l==NULL);
+}
+
+void Insfront(ListaDE &l, int e)
+{
+    ListaDE nuevo = new Nodo;
+    nuevo->info = e;
+    nuevo->ant = NULL;
+    if (l == NULL)
+        nuevo->sig = NULL;
+    else
+    {
+        l->ant = nuevo;
+        nuevo->sig = l;
+    }
+    l = nuevo;
+}
+//Precondición : !Vacia(l)
+int Primero (ListaDE l)
+{
+    return l->info;
+}
+
+//Precondición : !Vacia(l)
+void Resto (ListaDE &l)
+{
+    ListaDE aux = l;
+    l = l->sig;
+    delete (aux);
+}
+
+
+
+//NO ES PRIMITIVA DE LISTAS DOBLEMENTE ENCADENADAS
+int largoLista(ListaDE l) {
+    int largo = 0;
+        if(l != NULL) {
+            largo = 1 + largoLista(l->sig);
+        }
+    return largo;
+}
+//NO ES PRIMITIVA DE LAS LISTAS DOBLEMENTE ENCADENADAS
+//PRECONDICIÓN: NO VACÍ
+int Ultimo(ListaDE l) {
+    int e;
+    if(l->sig == NULL) {
+        e = l->info;
+    } else {
+        e = Ultimo(l->sig);
+    }
+    return e;
+}
+
+void mostrarListaIterativo(ListaDE l) {
+    int tam = largoLista(l);
+    //ListaDE aux = new Nodo;
+    //aux = l;
+    for(int i=0; i<tam; i++) {
+        printf("%d - ", l->info);
+        l = l->sig;
+    }
+}
+
+void mostrarListaRecursivo(ListaDE l) {
+    if(l != NULL) {
+        printf("%d - ",l->info);
+        mostrarListaRecursivo(l->sig);
+    }
+}
+
+/*
+MOSTRAR EN ORDEN DESCENDIENTE NOO SON PRIMITIVAS DE LAS LISTAS DOBLEMENTE ENCADENADAS
+adaptación casera
+*/
+void mostrarDsc(ListaDE l) {
+    if(l != NULL) {
+        printf("%d - ", l->info);
+        mostrarDsc(l->ant);
+    }
+}
+void mostrarListaDsc(ListaDE l) {
+    if(l != NULL) {
+        //si la lista no es nula, nos vamos hasta el último elemento
+        ListaDE aux = l;
+        while(aux->sig != NULL) {
+            aux = aux->sig;
+        }
+        //Parado sobre el último elemento, arrancamos a mostrar
+        mostrarDsc(aux);
+    }
+}
+
+
+int main() {
+    int opc = 0;
+    int val;
+    ListaDE l;
+    do {
+        printf("Seleccione opción: \n 1-Crear lista Doblemente Encadenada \n 2-Ingresar elemento \n 3-Eliminar primer elemento  \n 4-Mostrar primer elemento \n 5-Mostrar último elemento \n 6-Mostrar toda la lista (iterativo)  \n 7-Mostrar toda la lista (recursivo) \n 8-Mostrar toda la lista DESCENDIENTE \n 0-Salir \n");
+        scanf("%d", &opc);
+        switch(opc) {
+            case 1:
+                Crear(l);
+                break;
+            case 2:
+                printf("Ingresar el elemento \n");
+                scanf("%d", &val);
+                Insfront(l, val);
+                break;
+
+            case 3:
+                Resto(l);
+                break;
+
+            case 4:
+                printf("%d \n", Primero(l));
+                break;
+
+            case 5:
+                printf("%d \n", Ultimo(l));
+                break;
+
+            case 6:
+                mostrarListaIterativo(l);
+                break;
+
+            case 7:
+                mostrarListaRecursivo(l);
+                break;
+
+            case 8:
+                mostrarListaDsc(l);
+                break;
+
+            default:
+                break;
+        }
+        }while (opc != 0);
+
+    }
+
