@@ -1,0 +1,109 @@
+#include <stdio.h>
+
+typedef struct nodoL {
+
+ int info;
+ nodoL *sig;
+ } Nodo;
+
+typedef Nodo * Lista;
+
+typedef struct {
+ Lista prim;
+ Lista ult;
+ } ListaPPF;
+
+ void Crear (ListaPPF &l)
+{
+ l.prim = NULL;
+ l.ult = NULL;
+}
+bool Vacia (ListaPPF l)
+{
+ return (l.prim==NULL && l.ult==NULL);
+}
+//Precondición : !Vacia(l)
+int Primero (ListaPPF l)
+{
+ return l.prim->info;
+}
+//Precondición : !Vacia(l)
+int Ultimo (ListaPPF l)
+{
+ return l.ult->info;
+}
+//Precondición : !Vacia(l)
+void Resto (ListaPPF &l)
+{
+ Lista aux = l.prim->sig;
+ delete (l.prim);
+ l.prim = aux;
+ if (l.prim == NULL)
+    l.ult = NULL;
+}
+
+void Insfront (ListaPPF &l, int e)
+{
+ Lista nuevo = new Nodo;
+ nuevo->info = e;
+ nuevo->sig = l.prim;
+ l.prim = nuevo;
+ if (l.ult == NULL)
+ l.ult = nuevo;
+ }
+
+
+ void mostrarListaAsc(ListaPPF l) {
+     if(l.prim != NULL) {
+     Lista aux = l.prim->sig;
+     printf("%d -", l.prim->info);
+     l.prim = aux;
+     mostrarListaAsc(l);
+     } //Mostramos si no es null
+
+ }
+
+
+
+
+ int main() {
+    int opc = 0;
+    int val;
+    ListaPPF l;
+    do {
+        printf("Seleccione opción: \n 1-Crear lista \n 2-Ingresar elemento \n 3-Eliminar primer elemento 4-Mostrar primer elemento \n 5-Mostrar último elemento \n 6-Mostrar toda la lista en orden ascendente \n 0-Salir \n");
+        scanf("%d", &opc);
+        switch(opc) {
+            case 1:
+                Crear(l);
+                break;
+            case 2:
+                printf("Ingresar el elemento \n");
+                scanf("%d", &val);
+                Insfront(l, val);
+                break;
+
+            case 3:
+                Resto(l);
+                break;
+
+            case 4:
+                printf("%d \n", Primero(l));
+                break;
+
+            case 5:
+                printf("%d \n", Ultimo(l));
+                break;
+
+            case 6:
+                mostrarListaAsc(l);
+                break;
+
+            default:
+                break;
+        }
+        }while (opc != 0);
+
+    }
+
+
